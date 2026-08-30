@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekly Timetable</title>
+
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f5f5;
+      }
+
+      .timetable {
+        display: grid;
+        grid-template-columns: 70px repeat(7, 1fr);
+        width: 100%;
+        max-width: 1400px;
+        margin: 30px auto;
+        background: white;
+        border: 1px solid #ddd;
+      }
+
+      .header {
+        height: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .time {
+        height: 60px;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 5px;
+        font-size: 13px;
+        color: #666;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+      }
+
+      .cell {
+        height: 60px;
+        border-right: 1px solid #ddd;
+        border-bottom: 1px solid #ddd;
+        position: relative;
+      }
+
+      .event {
+        position: absolute;
+        left: 4px;
+        right: 4px;
+        top: 0;
+        background: #dbeafe;
+        border-radius: 6px;
+        padding: 8px;
+        font-size: 14px;
+        z-index: 10;
+        overflow: hidden;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="timetable" id="timetable">
+      <!-- 헤더 -->
+      <div class="header">시간</div>
+      <div class="header">월</div>
+      <div class="header">화</div>
+      <div class="header">수</div>
+      <div class="header">목</div>
+      <div class="header">금</div>
+      <div class="header">토</div>
+      <div class="header">일</div>
+    </div>
+
+    <script>
+      // ==========================
+      // 일정 입력하는 곳
+      // ==========================
+
+      const events = [
+        {
+          day: ["월", "화", "수", "목", "금", "토", "일"],
+          start: 6,
+          end: 7,
+          title: "기상",
+        },
+
+        {
+          day: "월",
+          start: 13,
+          end: 15,
+          title: "전자기학",
+        },
+
+        {
+          day: "월",
+          start: 15,
+          end: 16,
+          title: "과외",
+        },
+
+        {
+          day: "화",
+          start: 18,
+          end: 20,
+          title: "운동",
+        },
+      ];
+
+      // ==========================
+      // 시간표 생성
+      // ==========================
+
+      const timetable = document.getElementById("timetable");
+
+      const days = ["월", "화", "수", "목", "금", "토", "일"];
+
+      const startHour = 6;
+      const endHour = 24;
+
+      for (let hour = startHour; hour < endHour; hour++) {
+        // 시간 표시
+        const time = document.createElement("div");
+
+        time.className = "time";
+        time.textContent = `${String(hour).padStart(2, "0")}:00`;
+
+        timetable.appendChild(time);
+
+        // 요일별 셀 생성
+        days.forEach((day) => {
+          const cell = document.createElement("div");
+
+          cell.className = "cell";
+          cell.dataset.day = day;
+          cell.dataset.hour = hour;
+
+          timetable.appendChild(cell);
+        });
+      }
+
+      // ==========================
+      // 일정 배치
+      // ==========================
+
+      events.forEach((event) => {
+        const targetDays = Array.isArray(event.day) ? event.day : [event.day];
+
+        targetDays.forEach((day) => {
+          const cell = document.querySelector(
+            `.cell[data-day="${day}"][data-hour="${event.start}"]`,
+          );
+
+          if (!cell) return;
+
+          const eventElement = document.createElement("div");
+          eventElement.className = "event";
+          eventElement.textContent = event.title;
+
+          /*
+                1시간 = 60px
+
+                예:
+                13~15시
+                → 2시간
+                → 120px
+            */
+
+          const duration = event.end - event.start;
+          eventElement.style.height = `${duration * 60 - 6}px`;
+
+          cell.appendChild(eventElement);
+        });
+      });
+    </script>
+  </body>
+</html>
+```
