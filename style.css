@@ -1,3 +1,7 @@
+:root {
+  --scale: 0.7;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -35,6 +39,9 @@ body {
 
   border-top: 1px solid #ddd;
   border-left: 1px solid #ddd;
+
+   transform: scale(var(--scale));
+  transform-origin: top center;
 }
 
 
